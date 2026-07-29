@@ -1,0 +1,12 @@
+# Reference / handoff materials — not part of the deployed site
+*.zip
+*.docx
+*.pdf
+img/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
