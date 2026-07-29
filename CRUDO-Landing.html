@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CRUDO — Nuevo Drop</title>
+<!--
+  Analytics (analytics-tracking skill): dataLayer queda inicializado desde ya, así los
+  eventos de abajo (hero_cta_click, product_viewed, store_cta_click, instagram_click,
+  popup_*, etc.) se acumulan aunque todavía no haya GTM conectado. Cuando exista un
+  contenedor de Google Tag Manager real, descomentar el snippet de acá abajo y
+  reemplazar GTM-XXXXXXX por el ID propio — no hace falta tocar nada más del código.
+-->
+<script>window.dataLayer = window.dataLayer || [];</script>
+<!--
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -20,6 +31,25 @@
   .crudo-product-img:hover{transform:scale(1.04);filter:brightness(1.1);}
   .crudo-footer-link{transition:color 0.2s ease;}
   .crudo-footer-link:hover{color:#D6FF00 !important;}
+  .crudo-stock-badge{transition:color 0.2s ease;}
+  .crudo-stock-badge:hover{color:#D6FF00 !important;}
+
+  /* Popup (popup-cro skill): aviso del próximo drop */
+  .crudo-popup{
+    position:fixed;left:20px;bottom:20px;z-index:30;max-width:360px;
+    background:#0E0E0E;border:1px solid #2A2A2A;padding:28px;
+    transform:translateY(24px);opacity:0;visibility:hidden;pointer-events:none;
+    transition:transform 0.35s ease,opacity 0.35s ease,visibility 0.35s;
+  }
+  .crudo-popup.crudo-popup--open{transform:translateY(0);opacity:1;visibility:visible;pointer-events:auto;}
+  .crudo-popup-close{
+    position:absolute;top:14px;right:14px;background:none;border:none;color:#8A8A8A;
+    font-family:'Roboto Mono',monospace;font-size:13px;cursor:pointer;padding:4px;line-height:1;
+  }
+  .crudo-popup-close:hover{color:#EDEDED;}
+  @media (max-width:640px){
+    .crudo-popup{left:16px;right:16px;bottom:16px;max-width:none;padding:24px;}
+  }
 
   .crudo-burger{display:none;}
   .crudo-burger span{display:block;width:24px;height:2px;background:#EDEDED;transition:transform 0.25s ease,opacity 0.25s ease;}
@@ -97,10 +127,10 @@
         <a href="#seguinos" class="crudo-nav-link" style="color:#EDEDED;font-size:14px;font-weight:600;letter-spacing:0.08em;">CONTACT</a>
       </nav>
       <div style="display:flex;align-items:center;gap:20px;justify-self:end;">
-        <div class="crudo-cart" style="display:flex;align-items:center;gap:10px;font-family:'Roboto Mono',monospace;font-size:13px;letter-spacing:0.05em;color:#EDEDED;">
-          <span>CART (0)</span>
+        <a href="#drop" data-track="stock_badge_click" class="crudo-cart crudo-stock-badge" style="display:flex;align-items:center;gap:10px;font-family:'Roboto Mono',monospace;font-size:13px;letter-spacing:0.05em;color:#EDEDED;">
+          <span>STOCK 42/150</span>
           <span style="width:10px;height:10px;border-radius:50%;background:#D6FF00;display:inline-block;"></span>
-        </div>
+        </a>
         <button id="crudo-burger" class="crudo-burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="crudo-nav">
           <span></span><span></span><span></span>
         </button>
@@ -110,7 +140,7 @@
       <h1 style="font-family:'Anton',sans-serif;font-size:min(11vw,140px);line-height:0.88;text-transform:uppercase;color:#EDEDED;margin:0;letter-spacing:0.01em;animation:fadeUp 0.9s ease both;">NUEVO<br>DROP</h1>
       <p style="font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;color:#D6FF00;margin:24px 0 4px;letter-spacing:0.03em;animation:fadeUp 0.9s ease both 0.15s;">EDICIÓN LIMITADA.</p>
       <p style="font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;color:#EDEDED;margin:0 0 32px;letter-spacing:0.03em;animation:fadeUp 0.9s ease both 0.25s;">Cuando se agota, no vuelve.</p>
-      <a href="#drop" class="crudo-hero-cta crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:18px;letter-spacing:0.05em;padding:18px 40px;text-transform:uppercase;animation:fadeUp 0.9s ease both 0.35s;">VER DROPS</a>
+      <a href="#drop" data-track="hero_cta_click" class="crudo-hero-cta crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:18px;letter-spacing:0.05em;padding:18px 40px;text-transform:uppercase;animation:fadeUp 0.9s ease both 0.35s;">VER DROPS</a>
     </div>
     <div class="crudo-hero-detail" style="position:absolute;left:48px;bottom:28px;z-index:2;font-family:'Roboto Mono',monospace;color:#EDEDED;font-size:15px;display:flex;align-items:center;gap:10px;">
       <span>DROP_01</span><span style="color:#D6FF00;">/</span><span>150</span>
@@ -147,7 +177,7 @@
       <div class="crudo-shop-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:32px;">
         <div style="background:#1C1C1C;">
           <div style="overflow:hidden;">
-            <img class="crudo-product-img" src="assets/producto-1.png" alt="Buzo CRUDO OG" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+            <img class="crudo-product-img" data-track-view="product_viewed" data-product-name="Buzo CRUDO OG" data-product-price="55000" data-product-edition="01/100" src="assets/producto-1.png" alt="Buzo CRUDO OG" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
           </div>
           <div style="padding:24px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -159,7 +189,7 @@
         </div>
         <div style="background:#1C1C1C;">
           <div style="overflow:hidden;">
-            <img class="crudo-product-img" src="assets/producto-2.png" alt="Gorra CRUDO OG" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+            <img class="crudo-product-img" data-track-view="product_viewed" data-product-name="Gorra CRUDO OG" data-product-price="15000" data-product-edition="01/50" src="assets/producto-2.png" alt="Gorra CRUDO OG" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
           </div>
           <div style="padding:24px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -171,7 +201,8 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:56px;">
-        <a href="#" class="crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:16px;letter-spacing:0.05em;padding:16px 44px;text-transform:uppercase;">VER TODO</a>
+        <p style="font-family:'Roboto Mono',monospace;font-size:13px;color:#FF3B2F;letter-spacing:0.05em;text-transform:uppercase;margin:0 0 20px;">Quedan 42 de 150 piezas — no hay reposición</p>
+        <a href="https://ig.me/m/crudo_arg" target="_blank" rel="noopener" data-track="store_cta_click" data-track-location="shop" class="crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:16px;letter-spacing:0.05em;padding:16px 44px;text-transform:uppercase;">RESERVÁ LA TUYA</a>
       </div>
     </div>
   </section>
@@ -194,14 +225,15 @@
       <div class="crudo-seguinos-card" style="background:#0E0E0E;padding:56px 48px;">
         <p style="font-family:'Roboto Mono',monospace;font-size:14px;color:#8A8A8A;letter-spacing:0.1em;margin:0 0 16px;text-transform:uppercase;">01</p>
         <h3 style="font-family:'Anton',sans-serif;font-size:clamp(32px,4vw,48px);text-transform:uppercase;color:#EDEDED;margin:0 0 20px;">COMPRÁ</h3>
-        <p style="font-size:16px;color:#8A8A8A;margin:0 0 32px;line-height:1.6;">Entrá a la tienda. Lo que ves es lo que hay — sin reposición.</p>
-        <a href="#" class="crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:16px;letter-spacing:0.05em;padding:16px 40px;text-transform:uppercase;">IR A LA TIENDA</a>
+        <p style="font-size:16px;color:#8A8A8A;margin:0 0 8px;line-height:1.6;">Entrá a la tienda. Lo que ves es lo que hay — sin reposición.</p>
+        <p style="font-family:'Roboto Mono',monospace;font-size:13px;color:#FF3B2F;letter-spacing:0.05em;text-transform:uppercase;margin:0 0 24px;">42/150 disponibles</p>
+        <a href="https://ig.me/m/crudo_arg" target="_blank" rel="noopener" data-track="store_cta_click" data-track-location="seguinos" class="crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:16px;letter-spacing:0.05em;padding:16px 40px;text-transform:uppercase;">RESERVÁ POR INSTAGRAM</a>
       </div>
       <div class="crudo-seguinos-card" style="background:#0E0E0E;padding:56px 48px;">
         <p style="font-family:'Roboto Mono',monospace;font-size:14px;color:#8A8A8A;letter-spacing:0.1em;margin:0 0 16px;text-transform:uppercase;">02</p>
         <h3 style="font-family:'Anton',sans-serif;font-size:clamp(32px,4vw,48px);text-transform:uppercase;color:#EDEDED;margin:0 0 20px;">SEGUINOS</h3>
         <p style="font-size:16px;color:#8A8A8A;margin:0 0 32px;line-height:1.6;">Mirá el próximo drop antes que nadie.</p>
-        <a href="https://instagram.com/crudo_arg" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:12px;font-family:'Roboto Mono',monospace;font-size:20px;color:#EDEDED;">
+        <a href="https://instagram.com/crudo_arg" target="_blank" rel="noopener" data-track="instagram_click" data-track-location="seguinos" style="display:inline-flex;align-items:center;gap:12px;font-family:'Roboto Mono',monospace;font-size:20px;color:#EDEDED;">
           <span style="width:10px;height:10px;background:#D6FF00;display:inline-block;"></span>
           @crudo_arg
         </a>
@@ -219,7 +251,7 @@
           <a href="#somos" class="crudo-footer-link" style="color:#8A8A8A;font-size:13px;font-weight:600;letter-spacing:0.06em;">ABOUT</a>
           <a href="#seguinos" class="crudo-footer-link" style="color:#8A8A8A;font-size:13px;font-weight:600;letter-spacing:0.06em;">CONTACT</a>
         </nav>
-        <a href="https://instagram.com/crudo_arg" target="_blank" rel="noopener" class="crudo-footer-link" style="color:#8A8A8A;font-size:13px;font-weight:600;letter-spacing:0.06em;">@CRUDO_ARG</a>
+        <a href="https://instagram.com/crudo_arg" target="_blank" rel="noopener" data-track="instagram_click" data-track-location="footer" class="crudo-footer-link" style="color:#8A8A8A;font-size:13px;font-weight:600;letter-spacing:0.06em;">@CRUDO_ARG</a>
       </div>
       <p style="font-family:'Roboto Mono',monospace;font-size:12px;color:#8A8A8A;letter-spacing:0.08em;margin:0;text-align:center;">SIN FILTRO. SIN POSES. SIN VUELTAS.</p>
     </div>
@@ -227,23 +259,71 @@
 
 </div>
 
+<!-- Popup (popup-cro skill): captura de contacto para el próximo drop, nunca descuento -->
+<div id="crudo-popup" class="crudo-popup" role="dialog" aria-label="Aviso del próximo drop">
+  <button id="crudo-popup-close" class="crudo-popup-close" aria-label="Cerrar">✕</button>
+  <p style="font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;color:#EDEDED;margin:0 0 12px;line-height:1.1;">No te quedes afuera del próximo drop</p>
+  <p style="font-size:14px;color:#8A8A8A;line-height:1.5;margin:0 0 20px;">Te avisamos por Instagram antes de que el drop 02 se cuelgue.</p>
+  <a href="https://ig.me/m/crudo_arg" target="_blank" rel="noopener" data-track="popup_cta_click" class="crudo-btn" style="display:inline-block;background:#D6FF00;color:#0E0E0E;font-family:'Anton',sans-serif;font-size:14px;letter-spacing:0.05em;padding:13px 28px;text-transform:uppercase;">AVISENMÉ</a>
+</div>
+
 <script>
 (function () {
-  var ids = ['drop-reveal', 'shop-reveal', 'somos-reveal', 'seguinos-reveal'];
-  var obs = new IntersectionObserver(function (entries) {
+  var dataLayer = window.dataLayer = window.dataLayer || [];
+  function track(event, params) {
+    dataLayer.push(Object.assign({ event: event }, params || {}));
+  }
+
+  // --- Scroll-reveal (existente) + evento de sección vista (analytics-tracking) ---
+  var revealSections = {
+    'drop-reveal': 'drop_section_viewed',
+    'shop-reveal': 'shop_section_viewed',
+    'somos-reveal': 'somos_section_viewed',
+    'seguinos-reveal': 'seguinos_section_viewed'
+  };
+  var revealObs = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         entry.target.style.opacity = '1';
         entry.target.style.transform = 'translateY(0)';
-        obs.unobserve(entry.target);
+        var eventName = revealSections[entry.target.id];
+        if (eventName) track(eventName);
+        revealObs.unobserve(entry.target);
       }
     });
   }, { threshold: 0.15 });
-  ids.forEach(function (id) {
+  Object.keys(revealSections).forEach(function (id) {
     var el = document.getElementById(id);
-    if (el) obs.observe(el);
+    if (el) revealObs.observe(el);
   });
 
+  // --- product_viewed: cada prenda se trackea una sola vez al entrar en viewport ---
+  var productObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        track(el.dataset.trackView, {
+          product_name: el.dataset.productName,
+          value: Number(el.dataset.productPrice) || undefined,
+          currency: 'ARS',
+          edition_tag: el.dataset.productEdition
+        });
+        productObs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('[data-track-view]').forEach(function (el) {
+    productObs.observe(el);
+  });
+
+  // --- Clicks trackeados por atributo data-track (CTAs, Instagram, stock badge) ---
+  document.querySelectorAll('[data-track]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      track(el.dataset.track, { location: el.dataset.trackLocation || null });
+    });
+  });
+
+  // --- Menú mobile (existente) ---
   var burger = document.getElementById('crudo-burger');
   var nav = document.getElementById('crudo-nav');
   if (burger && nav) {
@@ -260,6 +340,34 @@
     nav.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', closeMenu);
     });
+  }
+
+  // --- Popup del próximo drop (popup-cro): trigger a 50% de scroll, una vez por sesión ---
+  var popup = document.getElementById('crudo-popup');
+  var popupClose = document.getElementById('crudo-popup-close');
+  if (popup && popupClose) {
+    var STORAGE_KEY = 'crudo_popup_dismissed';
+    var shown = false;
+    var showPopup = function () {
+      if (shown || sessionStorage.getItem(STORAGE_KEY)) return;
+      shown = true;
+      popup.classList.add('crudo-popup--open');
+      track('popup_shown', { trigger: 'scroll_50' });
+    };
+    var dismissPopup = function (reason) {
+      popup.classList.remove('crudo-popup--open');
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      track('popup_dismissed', { reason: reason });
+    };
+    popupClose.addEventListener('click', function () { dismissPopup('close_click'); });
+    popup.querySelector('[data-track="popup_cta_click"]').addEventListener('click', function () {
+      dismissPopup('cta_click');
+    });
+    window.addEventListener('scroll', function () {
+      var scrolled = window.scrollY + window.innerHeight;
+      var pageHeight = document.documentElement.scrollHeight;
+      if (pageHeight > 0 && scrolled / pageHeight >= 0.5) showPopup();
+    }, { passive: true });
   }
 })();
 </script>
